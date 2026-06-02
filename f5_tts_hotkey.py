@@ -550,11 +550,11 @@ def call_tts(ref_audio_path: str, ref_text: str, gen_text: str) -> str | None:
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=60) as response:
+    with urllib.request.urlopen(request, timeout=120) as response:
         event_id = json.loads(response.read().decode("utf-8"))["event_id"]
 
     request = urllib.request.Request(build_url(f"{api_prefix}/call/basic_tts/{event_id}"), method="GET")
-    with urllib.request.urlopen(request, timeout=300) as response:
+    with urllib.request.urlopen(request, timeout=600) as response:
         for raw_line in response:
             line = raw_line.decode("utf-8").strip()
             if not line.startswith("data:"):
@@ -585,7 +585,7 @@ def do_speak() -> None:
         print("No text selected")
         return
 
-    text = text[:500]
+    text = text[:300]
     print(f"Speaking: {text[:80]}{'...' if len(text) > 80 else ''}")
 
     try:
@@ -614,7 +614,7 @@ def do_speak_clipboard() -> None:
         print("Clipboard is empty")
         return
 
-    text = text[:500]
+    text = text[:300]
     print(f"Speaking clipboard: {text[:80]}{'...' if len(text) > 80 else ''}")
 
     try:
